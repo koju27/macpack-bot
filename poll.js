@@ -71,7 +71,7 @@ export async function sendTimePoll() {
     return;
   }
 
-  // Discord only guarantees accurate vote counts once a poll has closed.
+  
   // If it's still open (e.g. when testing), close it now and wait for the final tally.
   if (!dayPoll.poll.results?.is_finalized) {
     console.log('Day poll still open, closing it to get final results...');
