@@ -1,0 +1,20 @@
+name: Weekly takeover poll
+
+on:
+  schedule:
+    - cron: '0 14 * * 5'   # Fridays 14:00 UTC = 9 AM Toronto (winter)
+  workflow_dispatch:       # adds a "Run workflow" button for testing
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: node poll.js
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+          POLL_CHANNEL_ID: ${{ secrets.POLL_CHANNEL_ID }}
