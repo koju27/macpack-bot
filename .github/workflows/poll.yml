@@ -2,8 +2,15 @@ name: Weekly takeover poll
 
 on:
   schedule:
-    - cron: '0 14 * * 5'   # Fridays 14:00 UTC = 9 AM Toronto (winter)
-  workflow_dispatch:       # adds a "Run workflow" button for testing
+    - cron: '0 14 * * 5'   # Friday 9 AM Toronto (winter) -> day poll
+    - cron: '0 15 * * 6'   # Saturday 10 AM Toronto (winter) -> time poll
+  workflow_dispatch:       # "Run workflow" button for testing
+    inputs:
+      which:
+        description: Which poll to send
+        type: choice
+        options: [day, time]
+        default: day
 
 jobs:
   poll:
@@ -14,7 +21,7 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
-      - run: node poll.js
+      - run: node poll.js ${{ github.event.schedule == '0 15 * * 6' && 'time' || inputs.which || 'day' }}
         env:
           DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
           POLL_CHANNEL_ID: ${{ secrets.POLL_CHANNEL_ID }}
